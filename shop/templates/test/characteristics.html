@@ -1,0 +1,9 @@
+{#{% for p in products_info %}#}
+{#    {{ p.detail }}: {{ p.value }}#}
+{#{% endfor %}#}
+{% for key, val in data.items() %}
+    <h5>{{ key }}</h5>
+    {% for i in val %}
+        {{ i.name }}: {{ i.value }}<br>
+    {% endfor %}
+{% endfor %}

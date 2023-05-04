@@ -1,0 +1,118 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="wrapper">
+        <div class="product-card product-card-full">
+            <h1 class="product-card-title">{{ product.name }}
+                <hr>
+            </h1>
+            <div class="product-card-images" id="b_image">
+                <img src="{{ url_for('static', filename='images/' + product.image_1) }}" alt="{{ product.name }}">
+            </div>
+            <div class="product-card-thumbnails" id="s_image">
+                <img style="border: solid 1px black" src="{{ url_for('static', filename='images/' + product.image_1) }}"
+                     alt="">
+                <img src="{{ url_for('static', filename='images/' + product.image_2) }}" alt="">
+                <img src="{{ url_for('static', filename='images/' + product.image_3) }}" alt="">
+            </div>
+            <div class="product-card-characteristics">
+                {% for el in details %}
+                    {{ el.detail }}: {{ el.value }}
+                {% endfor %}
+            </div>
+            <div class="product-card-brand">BRAND LOGO</div>
+            <div class="product-card-stat">statistics</div>
+            <div class="product-card-buy">
+                <div class="product-buy product-buy-one-line">
+                    <div class="product-buy-price-wrapper product-buy-price-wrapper_interactive">
+                        <div class="product-buy-price">{{ product.price|int }} ₽</div>
+                        <div class="product-hint"><span><ion-icon
+                                name="information-circle-outline"></ion-icon></span>
+                        </div>
+                        {% if product.discount > 0 %}
+                            <div class="product-buy-discount">-{{ product.discount }}%</div>
+                        {% endif %}
+                    </div>
+                    <form class="sbm-form-sm" action="">
+                        <button type="submit" class="product-btn-buy-wish">
+                                        <span>
+                                            <ion-icon name="star-outline"></ion-icon>
+                                        </span>
+                        </button>
+                    </form>
+
+                    {#                    {% if session['ShoppingCart'][product.id|string] %}#}
+                    {#                        <a class="product-btn-buy-already" href="{{ url_for('get_cart') }}">В корзине</a>#}
+                    {#                    {% else %}#}
+                    <form class="sbm-form" action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" id="pr_id" name="product_id" value="{{ product.id }}">
+                        <button type="submit" class="product-btn-buy"><span>Купить</span></button>
+                        <input type="number" name="quantity" style="visibility: hidden" id="" value="1"
+                               min="1">
+                    </form>
+                    {#                    {% endif %}#}
+                </div>
+            </div>
+
+            {#                        <p style="font-weight: 700; grid-area: description">Описание</p>#}
+            {#                        <div class="product-card-description">{{ product.description }}#}
+            {#                        </div>#}
+        </div>
+        <div class="additional-block">
+            <div class="options">
+                <button class="btn-info" id="reviews"
+                        type="button">Отзывы
+                </button>
+                <button class="btn-info" id="characteristics">
+                    Характеристики
+                </button>
+            </div>
+            <div id="output" class="content">
+                {% include 'test/characteristics.html' %}
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const b_image = document.getElementById('b_image');
+        const s_image = document.getElementById('s_image').getElementsByTagName('img');
+        for (let i = 0; i < s_image.length; i++) {
+            s_image[i].addEventListener('click', full_image);
+        }
+
+        function full_image() {
+            console.log("Добро пожаловать в Веб-консоль");
+            console.log(this);
+            let ImageSRC = this.getAttribute('src');
+            b_image.innerHTML = "<img src=" + ImageSRC + ">";
+            for (let i = 0; i < s_image.length; i++) {
+                s_image[i].style = "border: none";
+            }
+
+            this.style = "width:105px; height:105px; object-fit:scale-down;border: solid 1px red";
+        }
+
+        function get_characteristics(p_id) {
+            $.ajax({
+                url: '/pr_char/' + p_id,
+                success: function (response) {
+                    console.log(response);
+                    $('#output').html(response.output);
+                }
+            });
+        }
+
+        const pr_id = document.getElementById('pr_id').value;
+        const btn_reviews = document.getElementById('reviews');
+        const btn_characteristics = document.getElementById('characteristics');
+        const content = document.getElementById('output');
+        btn_characteristics.addEventListener('click', () => {
+            get_characteristics(pr_id);
+            content.removeAttribute('hidden');
+        })
+        btn_reviews.addEventListener('click', () => {
+            content.setAttribute('hidden', 'hidden');
+        })
+    </script>
+{% endblock content %}

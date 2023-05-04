@@ -1,0 +1,146 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {#    {% include '_messages.html' %}#}
+    {% include "admin/admin-navbar.html" %}
+    <div class="wrapper">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Скидка</th>
+                    <th>Бренд</th>
+                    <th>Категория</th>
+                    <th>Image</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for product in products %}
+                    <tr>
+                        {#                        <td>{{ loop.index }}</td>#}
+                        <td data-label="ID">{{ product.id }}</td>
+                        <td data-label="Название">{{ product.name }}</td>
+                        <td data-label="Цена">{{ product.price }}</td>
+                        <td data-label="Скидка">{{ product.discount }}%</td>
+                        <td data-label="Бренд">{{ product.brand.name }}</td>
+                        <td data-label="Категория">{{ product.category.name }}</td>
+                        <td>
+                            <div class="img-wra">
+                                <img class="img-adm" src="{{ url_for('static', filename='images/' + product.image_1) }}">
+                            </div>
+                        </td>
+                        <td><a href="{{ url_for('update_product', prod_id=product.id) }}"
+                               class="btn btn-sm btn-outline-primary">Изменить</a>
+                            {#                            <a href="" class="btn btn-sm btn-danger">Delete</a>#}
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal-{{ product.id }}">Удалить
+                            </button>
+                        </td>
+                    </tr>
+                    <!-- Modal при удалении -->
+                    <div class="modal fade" id="exampleModal-{{ product.id }}" tabindex="-1"
+                         aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление товара</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p class="text-danger">Вы действительно хотите удалить {{ product.name }}?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                                        Отмена
+                                    </button>
+                                    <form action="{{ url_for('delete_product',product_id=product.id) }}" method="POST">
+                                        <button type="submit" class="btn btn-danger btn-sm">Подтвердить</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="btn btn-outline-info" style="position: relative; left:25%; width: 50% "><a
+                href="{{ url_for('add_product') }}">Добавить товар</a></div>
+    </div>
+{% endblock content %}
+
+{#<div class="container mt-5">#}
+{#            <table class="table table-sm table-condensed table-striped table-hover">#}
+{#                <thead>#}
+{#                <th>ID</th>#}
+{#                <th>Товар</th>#}
+{#                <th>Цена</th>#}
+{#                <th>Скидка</th>#}
+{#                <th>Бренд</th>#}
+{#                <th>Категория</th>#}
+{#                <th>Image</th>#}
+{#                <th>Изменить</th>#}
+{#                <th>Удалить</th>#}
+{#                </thead>#}
+{#                <tbody>#}
+{#                {% for product in products %}#}
+{#                    <tr>#}
+{#                    <td>{{ loop.index }}</td>#}
+{#                        <td>{{ product.id }}</td>#}
+{#                        <td>{{ product.name }}</td>#}
+{#                        <td>{{ product.price }}</td>#}
+{#                        <td>#}
+{#                            <div class="text-center">{{ product.discount }}%</div>#}
+{#                        </td>#}
+{#                        <td>{{ product.brand.name }}</td>#}
+{#                        <td>{{ product.category.name }}</td>#}
+{#                        <td><img src="{{ url_for('static', filename='images/' + product.image_1) }}" width="70"#}
+{#                                 height="50">#}
+{#                        </td>#}
+{#                        <td><a href="{{ url_for('update_product', prod_id=product.id) }}"#}
+{#                               class="btn btn-sm btn-outline-primary">Изменить</a></td>#}
+{#                        <td>#}
+{#                        <a href="" class="btn btn-sm btn-danger">Delete</a>#}
+{#                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"#}
+{#                                    data-bs-target="#exampleModal-{{ product.id }}">Удалить#}
+{#                            </button>#}
+{#                        </td>#}
+{#                    </tr>#}
+{##}
+{##}
+{#                    <!-- Modal -->#}
+{#                    <div class="modal fade" id="exampleModal-{{ product.id }}" tabindex="-1"#}
+{#                         aria-labelledby="exampleModalLabel"#}
+{#                         aria-hidden="true">#}
+{#                        <div class="modal-dialog">#}
+{#                            <div class="modal-content">#}
+{#                                <div class="modal-header">#}
+{#                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Удаление товара</h1>#}
+{#                                    <button type="button" class="btn-close" data-bs-dismiss="modal"#}
+{#                                            aria-label="Close"></button>#}
+{#                                </div>#}
+{#                                <div class="modal-body">#}
+{#                                    <p class="text-danger">Вы действительно хотите удалить {{ product.name }}?</p>#}
+{#                                </div>#}
+{#                                <div class="modal-footer">#}
+{#                                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">#}
+{#                                        Отмена#}
+{#                                    </button>#}
+{#                                    <form action="{{ url_for('delete_product',product_id=product.id) }}" method="POST">#}
+{#                                        <button type="submit" class="btn btn-danger btn-sm">Подтвердить</button>#}
+{#                                    </form>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{##}
+{#        </div>#}

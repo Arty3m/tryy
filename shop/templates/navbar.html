@@ -1,0 +1,52 @@
+<header id="navbar">
+    <nav class="navbar-container">
+        <a href="/" class="home-link">
+            <div class="navbar-logo"><img src="../static/images/home_logo.png" alt=""></div>
+            Главная
+        </a>
+        <form class="search-field" role="search" action="{{ url_for('result') }}">
+            <input class="input-search" type="search" placeholder="Поиск" aria-label="Search" name="q">
+            <button class="search-btn" type="submit">Найти</button>
+        </form>
+        <button type="button" id="navbar-toggle" aria-controls="navbar-menu" aria-label="Toggle menu"
+                aria-expanded="false">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+
+        <div id="navbar-menu" aria-labelledby="navbar-toggle">
+            <ul class="navbar-links">
+                <li class="navbar-item">
+                    <a class="navbar-link" href="/admin">Админ-панель</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    <li class="navbar-item">
+                        <a href="/profile" class="navbar-link text-info">
+                            <ion-icon name="person"></ion-icon>
+                            {{ current_user.username }}</a>
+                    </li>
+                    <li class="navbar-item">
+                        <a href="{{ url_for('logout') }}" class="navbar-link">Выйти</a>
+                    </li>
+
+
+                {% else %}
+                    <li class="navbar-item">
+                        <a href="{{ url_for('login_view') }}" class="navbar-link">Войти</a>
+                    </li>
+                {% endif %}
+                <li class="navbar-item">
+                    <a class="navbar-link" tabindex="-1" href="{{ url_for('get_cart') }}">
+                        <ion-icon name="cart"></ion-icon>
+                        Корзина
+                        {#                            ({{ session['ShoppingCart']|length }})#}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+    </nav>
+</header>

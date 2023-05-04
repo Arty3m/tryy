@@ -1,0 +1,182 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% include 'navbar.html' %}
+
+    <label style="padding-left: 10px; padding-top: 10px ; font-size: 20px">Сортировка</label>
+    <hr>
+
+
+    <form>
+        <button type="submit">
+            <input type="checkbox" id="b1" name="brand" value="msi">
+            <label for="b1">msi</label></button>
+        <button>
+            <input type="checkbox" id="b2" name="brand" value="palit">
+            <label for="b2">palit</label></button>
+        <button>
+            <input type="checkbox" id="b3" name="brand" value="intel">
+            <label for="b3">intel</label></button>
+        <button>
+            <input type="checkbox" id="b4" name="brand" value="kingstone">
+            <label for="b4">kingstone</label></button>
+    </form>
+
+    <form>
+
+        <input type="radio" id="sort-priceup" name="sort" value="priceup"
+               checked>
+        <label for="sort-priceup">По возрастанию цены</label><br>
+        <input type="radio" id="sort-pricedown" name="sort" value="pricedown"
+                {{ 'checked' if request.args.get('sort')=='pricedown' }}>
+        <label for="sort-pricedown">По убыванию цены</label><br>
+        <button type="submit">test</button>
+    </form>
+
+    <div id="output" class="catalog-products">
+        {% for product in products %}
+            <div class="catalog-product">
+                <a href="{{ url_for('prod', prod_id=product.id) }}">
+                    <div class="product-image">
+                        <img src="{{ url_for('static', filename='images/' + product.image_1) }}"
+                             alt="{{ product.name }}">
+                    </div>
+                </a>
+                <a class="product-name" href="{{ url_for('prod', prod_id=product.id) }}">
+                    <span>{{ product.name }}</span>
+                </a>
+
+                <div class="product-buy product-buy-one-line catalog-product-buy">
+                    <div class="product-buy-price-wrapper product-buy-price-wrapper_interactive">
+                        <div class="product-buy-price">{{ product.price|int }} ₽</div>
+                        <div class="product-hint"><span><ion-icon
+                                name="information-circle-outline"></ion-icon></span>
+                        </div>
+
+                        <div class="product-buy-discount">-{{ product.discount }}%</div>
+                    </div>
+                    <form class="sbm-form-sm" action="">
+                        <button type="submit" class="product-btn-buy-wish">
+                                        <span>
+                                            <ion-icon name="star-outline"></ion-icon>
+                                        </span>
+                        </button>
+                    </form>
+
+                    {% if session['ShoppingCart'][product.id|string] %}
+                        <a class="product-btn-buy-already" href="{{ url_for('get_cart') }}">В корзине</a>
+                    {% else %}
+
+                        <form class="sbm-form" action="{{ url_for('add_to_cart') }}" method="POST">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="product-btn-buy"><span>Купить</span></button>
+                            <input type="number" name="quantity" style="visibility: hidden" id="" value="1"
+                                   min="1">
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col text-center">
+                {% if products.has_prev %}
+                    <a href="{{ url_for('home', page=products.prev_num) }}"
+                       class="btn btn-outline-secondary btn-sm mt-3"><</a>
+                {% endif %}
+                {% if products.total > 4 %}
+                    {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            {% if products.page == page_num %}
+                                <a href="{{ url_for('home', page=page_num) }}"
+                                   class="btn btn-secondary btn-sm mt-3">{{ page_num }}</a>
+                            {% else %}
+                                <a href="{{ url_for('home', page=page_num) }}"
+                                   class="btn btn-outline-secondary btn-sm mt-3">{{ page_num }}</a>
+                            {% endif %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if products.has_next %}
+                    <a href="{{ url_for('home', page=products.next_num, sort=request.args.get('sort')) }}"
+                       class="btn btn-outline-secondary btn-sm mt-3">></a>
+                {% endif %}
+                <hr style="visibility: hidden">
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                var sort = document.querySelector('input[type="radio"][name="sort"]:checked').value;
+                var selected_checkboxes = document.querySelectorAll('input[type="checkbox"][name="brand"]:checked');
+                var brands = '';
+                for (var i = 0; i < selected_checkboxes.length; i++) {
+                    brands += '&brand=' + selected_checkboxes[i].value;
+                }
+                var url = '/aaa?sort=' + sort + brands;
+                console.log(sort);
+                console.log(brands);
+                console.log(url);
+                e.preventDefault();
+
+                $.ajax({
+                    type: 'POST',
+                    url: url
+                })
+                    .done(function (data) {
+                        $('#output').html(data.output);
+                        window.history.pushState("object or string", "Title", url);
+                    });
+                e.preventDefault();
+            });
+        });
+
+        {#$(document).ready(function () {#}
+        {#    $('form').on('submit', function (e) {#}
+        {#        var sort = document.querySelector('input[type="radio"][name="sort"]:checked').value;#}
+        {#        var selected_checkboxes = document.querySelectorAll('input[type="checkbox"][name="brand"]:checked');#}
+        {#        var brands = '';#}
+        {#        for (var i = 0; i < selected_checkboxes.length; i++) {#}
+        {#            brands += '&brand='+selected_checkboxes[i].value;#}
+        {#        }#}
+        {#        var url = '/aaa?sort=' + sort + brands ;#}
+        {#        console.log(sort);#}
+        {#        console.log(brands);#}
+        {#        console.log(url);#}
+        {#        e.preventDefault();#}
+        {##}
+        {#        $.ajax({#}
+        {##}
+        {#            type: 'GET',#}
+        {#            url: url,#}
+        {#            success: function (response) {#}
+        {#                console.log(response);#}
+        {#                $('#output').html(response.output);#}
+        {#                window.history.pushState("object or string", "Title", url);#}
+        {#            }#}
+        {#        });#}
+        {#    });#}
+        {#})
+            ;
+        #}
+
+        {##}
+        {#        function makeAjax() {#}
+        {#            console.log(this.val());#}
+        {#            $.ajax({#}
+        {#                data: {#}
+        {#                    brand: $('#brand').val(),#}
+        {#                },#}
+        {#                type: 'POST',#}
+        {#                url: 'a2'#}
+        {#            })#}
+        {#                .done(function (data) {#}
+        {#                    $('#output').html(data.output).show();#}
+        {#                });#}
+        {#            e.preventDefault();#}
+        {#        }#}
+    </script>
+{% endblock content %}

@@ -1,0 +1,80 @@
+{#--------------------------------------------------#}
+<div id="output" class="catalog-products">
+    {% for product in products %}
+        <div class="catalog-product">
+            <a href="{{ url_for('product_page', prod_id=product.id) }}">
+                <div class="product-image">
+                    <img src="{{ url_for('static', filename='images/' + product.image_1) }}"
+                         alt="{{ product.name }}">
+                </div>
+            </a>
+            <a class="product-name" href="{{ url_for('product_page', prod_id=product.id) }}">
+                <span>{{ product.name }}</span>
+            </a>
+
+            <div class="product-buy product-buy-one-line catalog-product-buy">
+                <div class="product-buy-price-wrapper product-buy-price-wrapper_interactive">
+                    <div class="product-buy-price">{{ product.price|int }} ₽</div>
+                    <div class="product-hint"><span><ion-icon
+                            name="information-circle-outline"></ion-icon></span>
+                    </div>
+                    {% if product.discount > 0%}
+                    <div class="product-buy-discount">-{{ product.discount }}%</div>
+                    {% endif %}
+                </div>
+                <form class="sbm-form-sm" action="">
+                    <button type="submit" class="product-btn-buy-wish">
+                        <span><ion-icon name="star-outline"></ion-icon></span>
+                    </button>
+                </form>
+
+{#                {% if session['ShoppingCart'][product.id|string] %}#}
+{#                    <a class="product-btn-buy-already" href="{{ url_for('get_cart') }}">В корзине</a>#}
+{#                {% else %}#}
+
+                    <form class="sbm-form" action="{{ url_for('add_to_cart') }}" method="POST">
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <button type="submit" class="product-btn-buy"><span>Купить</span></button>
+                        <input type="number" name="quantity" style="visibility: hidden; width: 0px"
+                               id="" value="1"
+                               min="1">
+                    </form>
+{#                {% endif %}#}
+            </div>
+        </div>
+    {% endfor %}
+    <div class="row">
+        <div class="col text-center">
+            {% if products.has_prev %}
+                <a href="{{ url_for('home', page=products.prev_num, sort=request.args.get('sort'), brand=request.args.getlist('brand')) }}"
+                   class="btn btn-outline-secondary btn-sm mt-3"><</a>
+
+            {% endif %}
+            {% if products.total > 4 %}
+                {% for page_num in products.iter_pages(left_edge=1, right_edge=2, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if products.page == page_num %}
+                            <a href="{{ url_for('home', page=page_num, sort=request.args.get('sort'), brand=request.args.getlist('brand')) }}"
+                               class="btn btn-secondary btn-sm mt-3">{{ page_num }}</a>
+
+                        {% else %}
+                            <a href="{{ url_for('home', page=page_num, sort=request.args.get('sort'), brand=request.args.getlist('brand')) }}"
+                               class="btn btn-outline-secondary btn-sm mt-3">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            {% if products.has_next %}
+                <a href="{{ url_for('home', page=products.next_num, sort=request.args.get('sort'), brand=request.args.getlist('brand')) }}"
+                   data-url="{{ request.args }}"
+                   class="btn btn-outline-secondary btn-sm mt-3">></a>
+
+            {% endif %}
+            <hr style="visibility: hidden">
+        </div>
+    </div>
+</div>
+{#--------------------------------------------------#}

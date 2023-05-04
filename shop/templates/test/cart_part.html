@@ -1,0 +1,47 @@
+{% if products|length <= 0 %}
+    <div class="cart-card-product_wrapper">
+        <a href="/"><h4>Корзина пока что пуста</h4></a>
+    </div>
+{% else %}
+    {#                    <a href="{{ url_for('clear_cart') }}">Очистить корзину</a>#}
+    <button id="clear_all" type="button" style="background: transparent;border: solid 1px black; border-radius: 8px ">
+        Очистить корзину
+    </button>
+    {% for p in products %}
+        <div class="cart-card-container">
+
+            <div class="cart-card-product_wrapper">
+                <a href="{{ url_for('product_page', prod_id=p.product.id) }}">
+                    <div class="cart-card-image">
+                        <img src="{{ url_for('static', filename='images/' + p.product.image_1) }}"
+                             alt="{{ p.product.name }}">
+                    </div>
+                </a>
+                <div class="cart-card-title"><a style="text-decoration: none; color: black"
+                                                href="{{ url_for('product_page', prod_id=p.product.id) }}">
+                    {{ p.product.name }}</a></div>
+
+                <hr class="g">
+
+                <div class="cart-card-quantity_buttons">
+                    <button id="btn-minus" class="btn-minus"
+                            type="button"  {{ 'disabled' if p.quantity == 1 }}>-
+                    </button>
+                    <input id="{{ p.product.id }}" class="count" type="number" value="{{ p.quantity }}"
+                           min="1" max="{{ p.product.stock }}" readonly>
+                    <button id="btn-plus" value="1" class="btn-plus"
+                            type="button"  {{ 'disabled' if p.quantity >= p.product.stock }}>+
+                    </button>
+                </div>
+
+                <div class="cart-card-price" data-d="{{ p.product.price|int }}">{{ p.product.price|int * p.quantity}}₽</div>
+                <div class="cart-card-btns">
+{#                    <a href="">star</a>#}
+                    {#                                        <a href="{{ url_for('de', prod_id=p.product.id) }}" id="del-item">del</a>#}
+                    <button id="del-item" class="btn-delete">Удалить</button>
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+{% endif %}

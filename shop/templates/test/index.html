@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+{% macro render_field(field) %}
+    <dt>{{ field.label }}
+    <dd>{{ field(**kwargs)|safe }}
+        {% if field.errors %}
+            <ul class=errors>
+                {% for error in field.errors %}
+                    <li class="text-danger">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </dd>
+{% endmacro %}
+<header>
+    <h2 class="logo">Logo</h2>
+    <nav class="navigation">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+        <button class="btnLogin-popup">Login</button>
+    </nav>
+</header>
+
+</body>
+
+<div class="wrapper">
+    <span class="icon-close"><ion-icon name="close"></ion-icon></span>
+    <div class="form-box login">
+        <h2>Войти</h2>
+        <form method="post">
+            {{ login.csrf_token }}
+            <div class="input-box">
+                <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                                <input type="email" value="" required>
+                                {{ login.email(class="input", type="email") }}
+                {{ render_field(login.email, class="input") }}
+                <label>Эл. Почта</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                                <input type="password" required>
+                                {{ render_field(login.password, class="input", type="password") }}
+                {{ login.password(class="input") }}
+                <label>Пароль</label>
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox">Запомнить меня</label>
+                <a href="#">Забыли пароль?</a>
+            </div>
+            <button type="submit" class="btn">Войти</button>
+            <div class="login-register">
+                <p>Еще нет аккаунта? <a href="#" class="register-link">Зарегистрироваться</a></p>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="form-box register">
+        <h2>Регистрация</h2>
+        {% if register.email.errors %}
+            <ul class="errors">
+                {% for error in register.email.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <form method="POST">
+            {{ register.csrf_token }}
+            <div class="input-box">
+                <span class="icon"><ion-icon name="person"></ion-icon></span>
+                                <input type="text" value="" required>
+                {{ register.username(class="input") }}
+                                {{ render_field(register.username, class="input", placeholder="никнейм") }}
+                <label>Никнейм</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                                <input type="email" value="" required>
+                {{ register.email(class="input") }}
+                                {{ render_field(register.email, class="input") }}
+                <label>Эл. Почта</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                                <input type="password" required>
+                {{ register.password(class="input") }}
+
+                <label>Пароль</label>
+            </div>
+            <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                                <input type="password" required>
+                {{ register.confirm(class="input") }}
+
+                <label>Пароль еще раз</label>
+            </div>
+            <div class="remember-forgot">
+                <label><input type="checkbox">Согласен с условиями</label>
+                <a href="#">Забыли пароль?</a>
+            </div>
+            <button type="submit" class="btn">Зарегистрироваться</button>
+            <div class="login-register">
+                <p>Уже есть аккаунт? <a href="#" class="login-link">Войти</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../static/js/script.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

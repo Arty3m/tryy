@@ -1,0 +1,100 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% include 'navbar.html' %}
+
+    <div class="wrapper">
+        <div class="wrapper2">
+            <div class="left-block">
+                <div class="filter-name">Производители</div>
+                <form class="form-filter">
+                    <div class="filter-list-content">
+                        {% for brand in brands %}
+                            <div class="ui-checkbox ui-checkbox-list">
+                                <button type="submit">
+                                    {% if brand.slug in request.args.getlist('brand') %}
+                                        <label><input type="checkbox" name="brand" value="{{ brand.slug }}" checked>
+                                            {{ brand.name }}
+                                        </label>
+                                    {% else %}
+                                        <label><input type="checkbox" name="brand" value="{{ brand.slug }}">
+                                            {{ brand.name }}
+                                        </label>
+                                    {% endif %}
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {#                    <button type="submit" class="filter-apply-btn">Применить</button>#}
+                </form>
+
+            </div>
+
+            <div class="main-block">
+
+                <div class="sort-block">
+
+                    <label style="padding-left: 10px; padding-top: 10px ; font-size: 20px">Сортировка</label>
+                    <hr>
+                    <div class="radio">
+                        <form class="form-filter">
+                            <button>
+                                <input type="radio" id="sort-priceup" name="sort" value="priceup"
+                                       checked>
+                                <label for="sort-priceup">По возрастанию цены</label>
+                            </button>
+                            <br>
+                            <button>
+                                <input type="radio" id="sort-pricedown" name="sort" value="pricedown"
+                                        {{ 'checked' if request.args.get('sort')=='pricedown' }}>
+                                <label for="sort-pricedown">По убыванию цены</label></button>
+                            </button>
+                            <br>
+                            <button>
+                                <input type="radio" id="sort-discount" name="sort" value="discount"
+                                        {{ 'checked' if request.args.get('sort')=='discount' }}>
+                                <label for="sort-discount">По скидке</label>
+                            </button>
+                            <br>
+                        </form>
+                    </div>
+
+
+                </div>
+                {#--------------------------------------------------#}
+                {% include 'products/catalog_products.html' %}
+                {#--------------------------------------------------#}
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.form-filter').on('submit', function (e) {
+                var sort = document.querySelector('input[type="radio"][name="sort"]:checked').value;
+                var selected_checkboxes = document.querySelectorAll('input[type="checkbox"][name="brand"]:checked');
+                var brands = '';
+
+                for (let i = 0; i < selected_checkboxes.length; i++) {
+                    brands += '&brand=' + selected_checkboxes[i].value;
+                }
+                var url = '/?sort=' + sort + brands;
+                {#console.log(sort);#}
+                {#console.log(brands);#}
+                {#console.log(url);#}
+
+                $.ajax({
+                    type: 'POST',
+                    url: url
+                })
+                    .done(function (data) {
+                        $('#output').html(data.output);
+                        window.history.pushState("object or string", "Title", url);
+                    });
+                e.preventDefault();
+            });
+        });
+
+
+    </script>
+{% endblock content %}

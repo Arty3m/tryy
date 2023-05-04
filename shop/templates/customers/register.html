@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% from '_formhelpers.html' import render_field %}
+    {% include 'navbar.html' %}
+    {#    <div class="wrapper">#}
+    <div class="wr">
+        <div class="reg-wrapper">
+            <div class="reg-log-form">
+                <div class="title">Регистрация</div>
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <div class="input-container ic2">
+                        {{ render_field(form.name, id='name', class='input', type='text', placeholder=' ') }}
+                        <div class="cut cut-sm"></div>
+                        <label for="name" class="placeholder">Имя</label>
+                    </div>
+                    <div class="input-container ic1">
+                        {{ render_field(form.username, id='username', class='input', type='text', placeholder=' ') }}
+                        <div class="cut"></div>
+                        <label for="username" class="placeholder">Никнейм</label>
+                    </div>
+                    <div class="input-container ic1">
+                        {{ render_field(form.email, id='email', class='input', type='email', placeholder=' ') }}
+                        <div class="cut cut-mid"></div>
+                        <label for="email" class="placeholder">Эл. Почта</label>
+                    </div>
+                    <div class="input-container ic1">
+                        {{ render_field(form.password, id='password', class='input', type='password', placeholder=' ') }}
+                        <div class="cut cut-short"></div>
+                        <label for="password" class="placeholder">Пароль</label>
+                    </div>
+                    <div class="input-container ic1">
+                        {{ render_field(form.confirm, id='confirm', class='input', type='password', placeholder=' ') }}
+                        <div class="cut cut-long"></div>
+                        <label for="confirm" class="placeholder">Повторите пароль</label>
+                    </div>
+                    {{ form.submit( class='submit') }}
+                    <div class="login-register">
+                        <p>Уже есть аккаунт? <a href="{{url_for('login_view')}}" class="login-link">Войти</a></p>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    {# ----------------------------------------- #}
+
+    {#    <div class="container">#}
+    {#        <div class="row">#}
+    {#            <div class="col-md-2"></div>#}
+    {#            <div class="col-md-8">#}
+    {#                <h1 style="background-color: hsl(0, 0%, 15%); color: hsl(0, 0%, 85%); height: 60px" class="text-center">Регистрация</h1>#}
+    {#            </div>#}
+    {#            <div class="col-md-2">#}
+    {##}
+    {#            </div>#}
+    {#            <form method="POST" enctype="multipart/form-data">#}
+    {#                {{ form.csrf_token }}#}
+    {#                <div class="row">#}
+    {#                    <div class="col-md-3"></div>#}
+    {#                    <div class="col-md-6">#}
+    {#                        {{ render_field(form.name, class='form-control') }}#}
+    {#                        {{ render_field(form.username, class='form-control') }}#}
+    {#                        {{ render_field(form.email, class='form-control') }}#}
+    {#                        {{ render_field(form.password, class='form-control') }}#}
+    {#                        {{ render_field(form.confirm, class='form-control') }}#}
+    {#                        {{ render_field(form.profile, class='form-control') }}#}
+    {#                        {{ render_field(form.city, class='form-control') }}#}
+    {#                        {{ form.submit( class='btn btn-info') }}#}
+    {#                    <hr>#}
+    {#                    <h>Уже есть аккаунт?#}
+    {#                        <a href="{{ url_for('login_view') }}" class="fw-bold">Войти</a></h>#}
+    {#                    </div>#}
+    {#                </div>#}
+    {##}
+    {#            </form>#}
+    {#        </div>#}
+    {#    </div>#}
+
+
+{% endblock content %}

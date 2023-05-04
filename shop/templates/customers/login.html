@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% from '_formhelpers.html' import render_field %}
+    {% include 'navbar.html' %}
+    <div class="wr">
+        <div class="reg-wrapper">
+            <div class="reg-log-form form-short">
+                <div class="title">Авторизация</div>
+                <div class="flash-msg">
+                    {% for message in get_flashed_messages() %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+                <form method="post">
+                    {{ form.csrf_token }}
+                    <div class="input-container ic2">
+                        {{ render_field(form.email, id='email', class='input', type='email', placeholder=' ') }}
+                        <div class="cut cut-mid"></div>
+                        <label for="email" class="placeholder">Эл. Почта</label>
+                    </div>
+                    <div class="input-container ic1">
+                        {{ render_field(form.password, id='password', class='input', type='password', placeholder=' ') }}
+                        <div class="cut cut-short"></div>
+                        <label for="password" class="placeholder">Пароль</label>
+                    </div>
+                    {{ form.submit_btn( class='submit') }}
+                    <div class="login-register">
+                        <p>Еще нет аккаунта? <a href="{{ url_for('register') }}" class="register-link">Зарегистрироваться</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

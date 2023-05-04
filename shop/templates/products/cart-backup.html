@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% include 'navbar-old.html' %}
+    <div class="container mt-4">
+        {% include '_messages.html' %}
+        {% if session['ShoppingCart']|length <= 0 %}
+            <div class="row">
+                <a class="text-center" href="/"><h4>Корзина пока что пуста</h4></a>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-sm">
+                        <thead>
+                        <th>id</th>
+                        <th>Image</th>
+                        <th>Название</th>
+                        <th>Количество</th>
+                        <th>Цена</th>
+                        <th>Скидка</th>
+                        <th>Подитог</th>
+                        <th>Update</th>
+                        <th>Удалить</th>
+                        </thead>
+                        <tbody>
+                        {% for key, product in session['ShoppingCart'].items() %}
+                            {% set discount = "%0.2f"|format((product.discount/100) * product.quantity|int * product.price|float) %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><a href="{{ url_for('product_page', prod_id=product.id) }}">
+                                    <img class="image-resize-sm"
+                                         src="{{ url_for('static', filename='images/' + product.image) }}"
+                                         alt="{{ product.name }}"></a>
+                                </td>
+                                <td>{{ product.name }}</td>
+                                {#                        for update#}
+                                <form action="{{ url_for('update_cart', code=key) }}" method="POST">
+                                    <td><input type="number" name="quantity" min="1" max="10"
+                                               value="{{ product.quantity }}"></td>
+                                    <td>{{ product.price }}₽</td>
+                                    {% if product.discount > 0 %}
+                                        <td>({{ product.discount }}%) &nbsp;  <div class="text-danger">  {{ discount }}</div></td>
+                                    {% else %}
+                                        <td> 0% </td>
+                                    {% endif %}
+                                    {% set subtotal = product.quantity|int * product.price|float %}
+                                    <td>{{ "%0.2f"|format((subtotal|float) - discount|float) }}</td>
+                                    <td>
+                                        <button type="submit" class="btn btn-sm btn-outline-info">Update</button>
+                                    </td>
+                                </form>
+                                <td><a class="btn button-delete" href="{{ url_for('delete_item_cart', code=key) }}"></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <table class="table table-sm">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>Итого: {{ grandtotal }}</td>
+                            <td><a href="{{ url_for('clear_cart') }}" class="btn btn-danger btn-sm float-end">Очистить корзину</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

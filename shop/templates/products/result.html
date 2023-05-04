@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% include 'navbar-old.html' %}
+
+    <div class="container">
+        {% include '_messages.html' %}
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-3">
+                    <div class="card">
+                        <a href="{{ url_for('product_page', prod_id=product.id) }}">
+                            <img class="card-img-top image-resize"
+                                 src="{{ url_for('static', filename='images/' + product.image_1) }}"
+                                 alt="{{ product.name }}">
+                        </a>
+                        <div class="card-body">
+                            {% if product.discount > 0 %}
+                                <h5 style="text-shadow: 1px 1px 2px #000000; color:#FF0000; transform: rotate(-15deg); position: absolute; top: 30%; left: 20%">
+                                    Скидка {{ product.discount }}%</h5>
+                            {% endif %}
+                            <div class="text-center test">{{ product.name }}</div>
+                            <p class="text-center">{{ product.price }} ₽</p>
+                        </div>
+                        <div class="card-footer">
+                            <form action="{{ url_for('add_to_cart') }}" method="POST">
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <button type="submit" class="float-end btn btn-sm btn-success float-right">Add to
+                                    cart
+                                </button>
+                                <input type="number" name="quantity" style="visibility: hidden" id="" value="1"
+                                       min="1" max="{{ product.stock }}">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock content %}

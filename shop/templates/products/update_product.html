@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h1 class="text-center bg-primary p-2">{{ title }}</h1>
+                {% include "_messages.html" %}
+                <br>
+                {% from "_formhelpers.html" import render_field %}
+                <form method="POST" enctype="multipart/form-data">
+                    {{ render_field(form.name, class="form-control", placeholder="Название товара") }}
+                    {{ render_field(form.price, class="form-control", placeholder="Цена товара") }}
+                    {{ render_field(form.discount, class="form-control", placeholder="Скидку на товар") }}
+                    {{ render_field(form.stock, class="form-control", placeholder="Количество товара") }}
+
+                    <label for="brand">Бренд</label>
+                    <select name="brand" id="brand" class="form-control" required>
+                        <option value="{{ product.brand_id }}">{{ product.brand.name }}</option>
+                        {% for brand in brands %}
+                            <option value="{{ brand.id }}">{{ brand.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="category">Категория</label>
+                    <select name="category" id="category" class="form-control" required>
+                        <option value="{{ product.category_id }}">{{ product.category.name }}</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {{ render_field(form.description, class="form-control", placeholder="Описание товара", rows="5") }}
+                    <div class="container">
+                        <div class="row">
+                            {{ form.csrf_token }}
+                            <div class="col-md-4">{{ render_field(form.image_1, class="form-control") }}</div>
+                            <div class="col-md-4">{{ render_field(form.image_2, class='form-control') }}</div>
+                            <div class="col-md-4">{{ render_field(form.image_3, class='form-control') }}</div>
+
+                        </div>
+                    </div>
+                    {#                        {{ render_field(form.submit, class="form-control") }}#}
+                    <p><input type="submit" value="Update product" class="btn-outline-info">
+                </form>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="wrapper">
+        <div class="cart-wrapper ">
+            <div id="output" class="main-block">
+                {% include 'test/cart_part.html' %}
+            </div>
+
+            <div class="left-block" style="border:solid 1px #cecece; height: 350px">
+                <h3 id="total" style="padding:10px 10px"></h3>
+                <button style=" margin-top: 85%;margin-left: 5%;width: 90%;height: 40px;" class="product-btn-buy">
+                    Оформить
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function update_quantity(p_id, v) {
+            $.ajax({
+                url: '/cart_upd/' + p_id + '/?v=' + v,
+            });
+        }
+
+        function delete_item(p_id) {
+            $.ajax({
+                url: '/cart_del/' + p_id,
+                success: function (response) {
+                    console.log(response);
+                    $('#output').html(response.output);
+                }
+            });
+        }
+
+        function clear_cart() {
+            $.ajax({
+                url: '/clear_cart',
+            }).done(function (data) {
+                $('#output').html(data.output);
+            });
+        }
+
+
+        function get_items() {
+            const inputs = document.querySelectorAll('.count');
+            const buttons_plus = document.querySelectorAll('#btn-plus');
+            const buttons_minus = document.querySelectorAll('#btn-minus');
+            const del_item = document.querySelectorAll('#del-item');
+            const btn_clear_all = document.querySelector('#clear_all');
+
+            const prices = document.querySelectorAll('.cart-card-price');
+            const total = document.querySelector('#total');
+
+            btn_clear_all.addEventListener('click', () => {
+                clear_cart();
+            });
+
+            inputs.forEach((input, index) => {
+                total.innerHTML = (+total.innerHTML + +prices[index].getAttribute('data-d') * input.value).toString();
+                buttons_plus[index].addEventListener('click', () => {
+                    const new_val = +input.value + 1;
+                    console.log(new_val);
+                    if (new_val < input.max) {
+                        input.setAttribute('value', new_val);
+                        update_quantity(input.id, 1);
+                        buttons_minus[index].removeAttribute('disabled');
+                    } else {
+                        input.setAttribute('value', new_val);
+                        update_quantity(input.id, 1);
+                        buttons_minus[index].removeAttribute('disabled');
+                        buttons_plus[index].setAttribute('disabled', 'disabled');
+                    }
+                    prices[index].innerHTML = (+prices[index].getAttribute('data-d') * new_val + '₽').toString(10);
+                    total.innerHTML = (+total.innerHTML + +prices[index].getAttribute('data-d')).toString();
+
+                })
+                buttons_minus[index].addEventListener('click', () => {
+                    const new_val = +input.value - 1;
+                    console.log(new_val);
+                    if (new_val > input.min) {
+                        input.setAttribute('value', new_val);
+                        update_quantity(input.id, -1);
+
+                        buttons_plus[index].removeAttribute('disabled');
+                    } else {
+                        input.setAttribute('value', new_val);
+                        update_quantity(input.id, -1);
+                        buttons_plus[index].removeAttribute('disabled');
+                        buttons_minus[index].setAttribute('disabled', 'disabled');
+                    }
+                    prices[index].innerHTML = (+prices[index].getAttribute('data-d') * new_val + '₽').toString();
+                    total.innerHTML = (+total.innerHTML - +prices[index].getAttribute('data-d')).toString();
+
+                })
+                $(del_item[index]).on('click', (e) => {
+                    total.innerHTML = '';
+                    delete_item(input.id);
+
+                })
+
+
+            })
+        }
+
+        get_items();
+        const target = document.querySelector('#output')
+        // Create an observer instance.
+        const observer = new MutationObserver(function (mutations) {
+            {#console.log(target);#}
+            {#alert('ИзменоноЧКА');#}
+            get_items();
+        });
+        observer.observe(target, {
+            attributes: true,
+            childList: true,
+            characterData: true
+        });
+
+    </script>
+{% endblock content %}

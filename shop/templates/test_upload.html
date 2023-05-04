@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Image</title>
+</head>
+<body>
+    <h1>Upload Image</h1>
+    {% from "_formhelpers.html" import render_field %}
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+{#        {{ render_field(form.file.label) }}#}
+        {{ render_field(form.file) }}
+        {{ render_field(form.submit) }}
+    </form>
+</body>
+</html>
