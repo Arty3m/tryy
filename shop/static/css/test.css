@@ -1096,6 +1096,7 @@ body {
 .cart-wrapper {
     height: 100%;
     display: grid;
+    grid-template-areas: "m-block l-block";
     grid-template-columns: 0.75fr 0.25fr;
     grid-gap: 20px;
 }
