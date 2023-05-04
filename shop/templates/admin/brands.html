@@ -3,35 +3,29 @@
     {% include '_messages.html' %}
     {% include 'admin/admin-navbar.html' %}
     <div class="wrapper">
-        <div class="container mt-5">
-            <table class="table table-sm table-condensed table-striped table-hover">
+        <div class="table-wrap">
+            <table>
                 <thead>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Изменить</th>
-                <th>Удалить</th>
-
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Действия</th>
+                </tr>
                 </thead>
                 <tbody>
                 {% if brands %}
                     {% for brand in brands %}
                         <tr>
-                            {#                    <td>{{ loop.index }}</td>#}
-                            <td>{{ brand.id }}</td>
-                            <td>{{ brand.name }}</td>
-                            <td><a href="{{ url_for('update_brand',brand_id=brand.id) }}"
-                                   class="btn btn-sm btn-outline-primary">Изменить</a></td>
-                            <td><!-- Button trigger modal -->
+                            <td data-label="ID">{{ brand.id }}</td>
+                            <td data-label="Название">{{ brand.name }}</td>
+                            <td><a href="{{ url_for('update_brand',brand_id=brand.id) }}"#}
+                                   class="btn btn-sm btn-outline-primary">Изменить</a>
                                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal-{{ brand.id }}">Удалить
                                 </button>
-                                {#                            <a href="" class="btn btn-sm btn-danger">Delete</a>#}
                             </td>
                         </tr>
-
-
-
-                        <!-- Modal -->
+                        {#                        <!-- Modal -->#}
                         <div class="modal fade" id="exampleModal-{{ brand.id }}" tabindex="-1"
                              aria-labelledby="exampleModalLabel"
                              aria-hidden="true">
@@ -52,7 +46,6 @@
                                         <form action="{{ url_for('delete_brand',brand_id=brand.id) }}" method="POST">
                                             <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
                                         </form>
-
                                     </div>
                                 </div>
                             </div>
@@ -61,12 +54,10 @@
                 {% else %}
                     {% for category in categories %}
                         <tr>
-                            {#                    <td>{{ loop.index }}</td>#}
-                            <td>{{ category.id }}</td>
-                            <td>{{ category.name }}</td>
+                            <td  data-label="ID">{{ category.id }}</td>
+                            <td data-label="Название">{{ category.name }}</td>
                             <td><a href="{{ url_for('update_category', cat_id=category.id) }}"
-                                   class="btn btn-sm btn-outline-primary">Изменить</a></td>
-                            <td>
+                                   class="btn btn-sm btn-outline-primary">Изменить</a>
                                 <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal-{{ category.id }}">Удалить
                                 </button>
@@ -94,7 +85,6 @@
                                               method="POST">
                                             <button type="submit" class="btn btn-danger btn-sm">Подтвердить</button>
                                         </form>
-
                                     </div>
                                 </div>
                             </div>

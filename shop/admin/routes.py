@@ -10,7 +10,8 @@ from flask_login import login_required
 @app.route('/admin')
 @login_required
 def admin():
-    products: Product = Product.query.all()
+    page = request.args.get('page', 1, type=int)
+    products: Product = Product.query.paginate(page=page, per_page=5)
     return render_template('admin/index.html', title='Admin Page', products=products)
 
 

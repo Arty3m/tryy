@@ -26,10 +26,6 @@ def pr_char(product_id):
 @app.route('/product/<int:prod_id>', methods=["POST", "GET"])
 def product_page(prod_id):
     product = Product.query.filter(Product.id == prod_id).first()
-    details = ProductDetail.query.filter(ProductDetail.product_id == prod_id).all()
-    print(details)
-    for t in details:
-        print(t.detail, t.value)
     return render_template('test/product_page.html', product=product, data=dict())
 
 
@@ -51,7 +47,6 @@ def home():
         products = products_query.order_by(Product.discount.desc()).paginate(page=page, per_page=4)
     else:
         products = products_query.order_by(Product.price.asc()).paginate(page=page, per_page=4)
-    print('Запрос к бд')
     if request.method == 'POST':
         return jsonify({'output': render_template('products/catalog_products.html', products=products)})
 

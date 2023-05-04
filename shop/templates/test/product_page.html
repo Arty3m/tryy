@@ -47,7 +47,7 @@
                     <form class="sbm-form" action="{{ url_for('add_to_cart') }}" method="POST">
                         <input type="hidden" id="pr_id" name="product_id" value="{{ product.id }}">
                         <button type="submit" class="product-btn-buy"><span>Купить</span></button>
-                        <input type="number" name="quantity" style="visibility: hidden" id="" value="1"
+                        <input type="number" name="quantity" style="width: 0; visibility: hidden" id="" value="1"
                                min="1">
                     </form>
                     {#                    {% endif %}#}
@@ -58,20 +58,39 @@
             {#                        <div class="product-card-description">{{ product.description }}#}
             {#                        </div>#}
         </div>
-        <div class="additional-block">
-            <div class="options">
-                <button class="btn-info" id="reviews"
-                        type="button">Отзывы
-                </button>
-                <button class="btn-info" id="characteristics">
-                    Характеристики
-                </button>
-            </div>
-            <div id="output" class="content">
-                {% include 'test/characteristics.html' %}
-            </div>
-        </div>
 
+
+
+
+                <div class="additional-block">
+                    <div class="options">
+                        <button class="btn-info" id="description">
+                            Описание
+                        </button>
+                        <button class="btn-info" id="reviews">
+                            Отзывы
+                        </button>
+                        <button class="btn-info" id="characteristics">
+                            Характеристики
+                        </button>
+                    </div>
+                    <div id="output-desc" class="content">
+                        <h5>Описание</h5>
+                        <hr>
+                        {{ product.description }}
+                    </div>
+                    <div id="output-review" class="content" hidden="hidden">
+                        {% if current_user.is_active %}
+                            sda
+                        {% endif %}
+                    </div>
+                    <div id="output-details" class="content" hidden="hidden">
+                        {% include 'test/characteristics.html' %}
+                    </div>
+                </div>
+        <br>
+        <br>
+        <br>
     </div>
 
     <script>
@@ -98,21 +117,35 @@
                 url: '/pr_char/' + p_id,
                 success: function (response) {
                     console.log(response);
-                    $('#output').html(response.output);
+                    $('#output-details').html(response.output);
                 }
             });
         }
 
         const pr_id = document.getElementById('pr_id').value;
         const btn_reviews = document.getElementById('reviews');
-        const btn_characteristics = document.getElementById('characteristics');
-        const content = document.getElementById('output');
-        btn_characteristics.addEventListener('click', () => {
+        const btn_details = document.getElementById('characteristics');
+        const btn_description = document.getElementById('description');
+
+        const product_details = document.getElementById('output-details');
+        const product_desc = document.getElementById('output-desc');
+        const product_review = document.getElementById('output-review');
+
+        btn_details.addEventListener('click', () => {
             get_characteristics(pr_id);
-            content.removeAttribute('hidden');
+            product_details.removeAttribute('hidden');
+            product_desc.setAttribute('hidden', 'hidden')
+            product_review.setAttribute('hidden', 'hidden')
         })
         btn_reviews.addEventListener('click', () => {
-            content.setAttribute('hidden', 'hidden');
+            product_review.removeAttribute('hidden');
+            product_details.setAttribute('hidden', 'hidden');
+            product_desc.setAttribute('hidden', 'hidden');
+        })
+        btn_description.addEventListener('click', () => {
+            product_desc.removeAttribute('hidden');
+            product_details.setAttribute('hidden', 'hidden');
+            product_review.setAttribute('hidden', 'hidden')
         })
     </script>
 {% endblock content %}

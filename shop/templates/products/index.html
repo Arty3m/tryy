@@ -4,8 +4,8 @@
 
     <div class="wrapper">
         <div class="wrapper2">
-            <div class="left-block">
-                <div class="filter-name">Производители</div>
+            <div id="left-block" class="left-block">
+                <div class="filter-name">Производители <button id="tss" type="submit" class="tss">X</button></div>
                 <form class="form-filter">
                     <div class="filter-list-content">
                         {% for brand in brands %}
@@ -33,7 +33,7 @@
 
                 <div class="sort-block">
 
-                    <label style="padding-left: 10px; padding-top: 10px ; font-size: 20px">Сортировка</label>
+                    <label style="padding-left: 10px; padding-top: 10px ; font-size: 20px">Сортировка</label> <button id="sh_filter" class="sh_filter" type="button"><ion-icon name="funnel"></ion-icon></button>
                     <hr>
                     <div class="radio">
                         <form class="form-filter">
@@ -95,6 +95,22 @@
             });
         });
 
+    const f = document.getElementById('sh_filter');
+    const tss = document.getElementById('tss');
+    const a = document.getElementById('left-block');
 
+    console.log(a);
+    console.log(f);
+    f.addEventListener('click', ()=>{
+        a.style.position = 'fixed';
+        a.style.zIndex = '10';
+        a.style.left = '0';
+
+    })
+        tss.addEventListener('click',()=>{
+            a.style.position='relative';
+            a.style.zIndex = '0';
+
+        })
     </script>
 {% endblock content %}
